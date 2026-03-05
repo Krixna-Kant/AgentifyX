@@ -1,0 +1,493 @@
+{
+    "document_name": "CustomerSupportSystem_v3.pdf",
+    "composite_readiness": 78.5,
+    "recommended_framework": "LangGraph",
+    "transformation_summary": "This customer support system is a strong candidate for agentic transformation. The document describes a multi-stage ticket handling pipeline with classification, sentiment analysis, knowledge retrieval, escalation workflows, resolution tracking, and reporting — all of which map naturally to autonomous agents. Two critical points require human-in-the-loop oversight: escalation decisions and resolution quality validation.",
+    "readiness_scores": {
+        "TaskDecomposability": 85,
+        "DecisionComplexity": 72,
+        "ToolIntegrability": 88,
+        "AutonomyPotential": 76,
+        "DataAvailability": 82,
+        "RiskLevel": 65,
+        "ROIPotential": 90
+    },
+    "agents": [
+        {
+            "agent_id": "ticket_classifier",
+            "agent_name": "TicketClassifierAgent",
+            "role": "Ticket Intake & Classification",
+            "goal": "Parse incoming support tickets, extract metadata (priority, category, language), and route to the appropriate downstream agent based on content analysis.",
+            "tools_required": [
+                "spaCy NLP",
+                "Custom Classifier Model",
+                "Ticket Queue API"
+            ],
+            "input_sources": [
+                "Support Ticket Queue",
+                "Email Gateway",
+                "Chat Widget"
+            ],
+            "output_artifacts": [
+                "Classified Ticket JSON",
+                "Routing Decision"
+            ],
+            "hitl_required": false,
+            "hitl_checkpoints": [],
+            "confidence_score": 0.88,
+            "evidence_citations": [
+                {
+                    "page": 3,
+                    "snippet": "Tickets are currently manually triaged by L1 agents who read each email and assign categories based on a decision tree."
+                },
+                {
+                    "page": 5,
+                    "snippet": "Average triage time is 4.2 minutes per ticket, with 23% misclassification rate."
+                }
+            ]
+        },
+        {
+            "agent_id": "sentiment_agent",
+            "agent_name": "SentimentAnalysisAgent",
+            "role": "Customer Sentiment & Urgency Detection",
+            "goal": "Analyze ticket text and customer history to determine sentiment (positive/neutral/negative/angry) and urgency level, triggering priority escalation for critical cases.",
+            "tools_required": [
+                "Transformers Sentiment Pipeline",
+                "Customer History DB",
+                "Priority Rules Engine"
+            ],
+            "input_sources": [
+                "Classified Ticket JSON"
+            ],
+            "output_artifacts": [
+                "Sentiment Score",
+                "Urgency Flag",
+                "Customer Risk Profile"
+            ],
+            "hitl_required": false,
+            "hitl_checkpoints": [],
+            "confidence_score": 0.82,
+            "evidence_citations": [
+                {
+                    "page": 7,
+                    "snippet": "Customer satisfaction surveys show that response tone mismatch is the #2 complaint, suggesting automated sentiment detection would reduce friction."
+                },
+                {
+                    "page": 8,
+                    "snippet": "VIP customers (enterprise tier) require priority handling within 15 minutes."
+                }
+            ]
+        },
+        {
+            "agent_id": "knowledge_retrieval",
+            "agent_name": "KnowledgeRetrievalAgent",
+            "role": "Knowledge Base Search & Answer Generation",
+            "goal": "Search the company knowledge base, FAQ, and past resolution history to generate candidate answers for the support ticket, ranked by relevance and confidence.",
+            "tools_required": [
+                "ChromaDB Vector Search",
+                "RAG Pipeline",
+                "Knowledge Base API",
+                "Confluence API"
+            ],
+            "input_sources": [
+                "Classified Ticket JSON",
+                "Sentiment Score"
+            ],
+            "output_artifacts": [
+                "Candidate Answers (ranked)",
+                "Source Citations",
+                "Confidence Score"
+            ],
+            "hitl_required": false,
+            "hitl_checkpoints": [],
+            "confidence_score": 0.85,
+            "evidence_citations": [
+                {
+                    "page": 12,
+                    "snippet": "The knowledge base contains 3,400 articles but agents report difficulty finding relevant content, leading to inconsistent answers."
+                },
+                {
+                    "page": 14,
+                    "snippet": "42% of tickets are repeat questions that have existing documented solutions."
+                }
+            ]
+        },
+        {
+            "agent_id": "escalation_agent",
+            "agent_name": "EscalationAgent",
+            "role": "Escalation Decision & Routing",
+            "goal": "Evaluate whether a ticket requires human escalation based on complexity, sentiment, customer tier, and policy rules. Route to appropriate specialist team when thresholds are exceeded.",
+            "tools_required": [
+                "Escalation Rules Engine",
+                "Team Availability API",
+                "SLA Monitor"
+            ],
+            "input_sources": [
+                "Sentiment Score",
+                "Urgency Flag",
+                "Customer Risk Profile",
+                "Candidate Answers"
+            ],
+            "output_artifacts": [
+                "Escalation Decision",
+                "Specialist Assignment",
+                "SLA Timer"
+            ],
+            "hitl_required": true,
+            "hitl_checkpoints": [
+                "escalation_approval",
+                "specialist_override"
+            ],
+            "confidence_score": 0.74,
+            "evidence_citations": [
+                {
+                    "page": 18,
+                    "snippet": "Escalation decisions currently require manager approval for any ticket involving refunds over $500 or legal/compliance issues."
+                },
+                {
+                    "page": 20,
+                    "snippet": "Mis-escalations cost an average of 34 minutes of specialist time per incident."
+                }
+            ]
+        },
+        {
+            "agent_id": "resolution_tracker",
+            "agent_name": "ResolutionTrackerAgent",
+            "role": "Resolution Execution & Quality Validation",
+            "goal": "Execute the selected resolution (send response, trigger refund, update account), track customer acknowledgment, and validate resolution quality through follow-up checks.",
+            "tools_required": [
+                "CRM API",
+                "Payment Gateway",
+                "Email Sender",
+                "Satisfaction Survey API"
+            ],
+            "input_sources": [
+                "Candidate Answers",
+                "Escalation Decision"
+            ],
+            "output_artifacts": [
+                "Resolution Record",
+                "Customer Response",
+                "Quality Score"
+            ],
+            "hitl_required": true,
+            "hitl_checkpoints": [
+                "refund_approval",
+                "response_review"
+            ],
+            "confidence_score": 0.79,
+            "evidence_citations": [
+                {
+                    "page": 24,
+                    "snippet": "Resolution quality is measured by first-contact resolution rate (currently 61%) and customer satisfaction score (3.7/5)."
+                },
+                {
+                    "page": 26,
+                    "snippet": "Automated responses require human review for any financial transactions or account modifications."
+                }
+            ]
+        },
+        {
+            "agent_id": "reporting_agent",
+            "agent_name": "ReportingAgent",
+            "role": "Analytics & Dashboard Generation",
+            "goal": "Aggregate resolution data, calculate KPIs (FCR rate, CSAT, avg handle time, automation rate), and generate daily/weekly performance dashboards.",
+            "tools_required": [
+                "Analytics Engine",
+                "Dashboard API",
+                "Slack Notifier",
+                "CSV Exporter"
+            ],
+            "input_sources": [
+                "Resolution Record",
+                "Quality Score",
+                "SLA Timer"
+            ],
+            "output_artifacts": [
+                "Daily KPI Report",
+                "Weekly Trend Analysis",
+                "Alert Notifications"
+            ],
+            "hitl_required": false,
+            "hitl_checkpoints": [],
+            "confidence_score": 0.91,
+            "evidence_citations": [
+                {
+                    "page": 30,
+                    "snippet": "Managers spend 2 hours daily compiling manual reports from 4 different systems."
+                },
+                {
+                    "page": 31,
+                    "snippet": "Real-time dashboard access would enable proactive SLA management."
+                }
+            ]
+        }
+    ],
+    "legacy_pain_points": [
+        {
+            "pain_point": "Manual ticket triage takes 4.2 min/ticket with 23% misclassification rate",
+            "severity": "high",
+            "agent_solution": "ticket_classifier"
+        },
+        {
+            "pain_point": "Customer sentiment is not systematically tracked, leading to tone-deaf responses",
+            "severity": "high",
+            "agent_solution": "sentiment_agent"
+        },
+        {
+            "pain_point": "Knowledge base search is ineffective — agents can't find existing solutions",
+            "severity": "medium",
+            "agent_solution": "knowledge_retrieval"
+        },
+        {
+            "pain_point": "Escalation decisions are inconsistent, causing 34-min specialist time waste per mis-escalation",
+            "severity": "high",
+            "agent_solution": "escalation_agent"
+        },
+        {
+            "pain_point": "Managers spend 2 hours daily compiling reports from 4 different systems",
+            "severity": "medium",
+            "agent_solution": "reporting_agent"
+        }
+    ],
+    "assumptions_made": [
+        "The existing CRM API supports programmatic ticket creation and status updates",
+        "Historical ticket data (12+ months) is available for training the classification model",
+        "The knowledge base content is reasonably current and covers 80%+ of common issues"
+    ],
+    "data_gaps": [
+        "No information on current API rate limits or authentication mechanisms",
+        "Customer tier definitions and SLA thresholds not fully specified in the document"
+    ],
+    "mermaid_flowchart": "graph TD\n    A[📥 Support Tickets] --> B[TicketClassifierAgent]\n    B --> C[SentimentAnalysisAgent]\n    C --> D[KnowledgeRetrievalAgent]\n    D --> E{EscalationAgent}\n    E -->|No Escalation| F[ResolutionTrackerAgent]\n    E -->|Escalation Needed| G{{HITL: Manager Approval}}\n    G -->|Approved| H[Specialist Team]\n    G -->|Rejected| F\n    H --> F\n    F --> I{{HITL: Quality Review}}\n    I -->|Passed| J[ReportingAgent]\n    I -->|Failed| F\n    J --> K[📊 Dashboards & Reports]\n    style G fill:#DC2626,color:#fff\n    style I fill:#DC2626,color:#fff\n    style B fill:#7C3AED,color:#fff\n    style C fill:#7C3AED,color:#fff\n    style D fill:#7C3AED,color:#fff\n    style E fill:#7C3AED,color:#fff\n    style F fill:#7C3AED,color:#fff\n    style J fill:#7C3AED,color:#fff",
+    "mermaid_sequence": "sequenceDiagram\n    participant User\n    participant Classifier as TicketClassifier\n    participant Sentiment as SentimentAgent\n    participant KB as KnowledgeRetrieval\n    participant Escalation as EscalationAgent\n    participant Human as HITL Reviewer\n    participant Resolution as ResolutionTracker\n    participant Reports as ReportingAgent\n\n    User->>Classifier: Submit support ticket\n    Classifier->>Classifier: Extract metadata & classify\n    Classifier->>Sentiment: Forward classified ticket\n    Sentiment->>Sentiment: Analyze sentiment & urgency\n    Sentiment->>KB: Request knowledge search\n    KB->>KB: Vector search + RAG\n    KB->>Escalation: Candidate answers + scores\n    Escalation->>Escalation: Evaluate escalation rules\n    alt Needs Escalation\n        Escalation->>Human: Request approval\n        Human->>Escalation: Approve/Reject\n    end\n    Escalation->>Resolution: Route to resolution\n    Resolution->>Resolution: Execute resolution\n    Resolution->>Human: Quality review\n    Human->>Resolution: Pass/Fail\n    Resolution->>Reports: Log resolution data\n    Reports->>Reports: Calculate KPIs\n    Reports->>User: Dashboard update",
+    "graph_spec": {
+        "nodes": [
+            {
+                "id": "inp_support_tickets",
+                "label": "📥 Support Tickets",
+                "group": "input",
+                "title": "<b>Input Source</b><br>Support Ticket Queue, Email Gateway, Chat Widget",
+                "color": {
+                    "background": "#1A56A6",
+                    "border": "#4F9FFF"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "ticket_classifier",
+                "label": "TicketClassifierAgent",
+                "group": "agent",
+                "title": "<b>TicketClassifierAgent</b><br><i>Ticket Intake & Classification</i><br>Confidence: 88%<br>HITL: No ✅",
+                "color": {
+                    "background": "#7C3AED",
+                    "border": "#9F67FF"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "sentiment_agent",
+                "label": "SentimentAnalysisAgent",
+                "group": "agent",
+                "title": "<b>SentimentAnalysisAgent</b><br><i>Customer Sentiment & Urgency</i><br>Confidence: 82%<br>HITL: No ✅",
+                "color": {
+                    "background": "#7C3AED",
+                    "border": "#9F67FF"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "knowledge_retrieval",
+                "label": "KnowledgeRetrievalAgent",
+                "group": "agent",
+                "title": "<b>KnowledgeRetrievalAgent</b><br><i>Knowledge Base Search</i><br>Confidence: 85%<br>HITL: No ✅",
+                "color": {
+                    "background": "#7C3AED",
+                    "border": "#9F67FF"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "escalation_agent",
+                "label": "EscalationAgent",
+                "group": "agent",
+                "title": "<b>EscalationAgent</b><br><i>Escalation Decision & Routing</i><br>Confidence: 74%<br>HITL: Yes ⚠️",
+                "color": {
+                    "background": "#7C3AED",
+                    "border": "#9F67FF"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "hitl_escalation",
+                "label": "⏸️ HITL",
+                "group": "hitl",
+                "title": "<b>⏸️ Human Approval Required</b><br>Agent: EscalationAgent<br>Checkpoints: escalation_approval, specialist_override",
+                "color": {
+                    "background": "#DC2626",
+                    "border": "#F87171"
+                },
+                "shape": "diamond"
+            },
+            {
+                "id": "resolution_tracker",
+                "label": "ResolutionTrackerAgent",
+                "group": "agent",
+                "title": "<b>ResolutionTrackerAgent</b><br><i>Resolution Execution & Quality</i><br>Confidence: 79%<br>HITL: Yes ⚠️",
+                "color": {
+                    "background": "#7C3AED",
+                    "border": "#9F67FF"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "hitl_resolution",
+                "label": "⏸️ HITL",
+                "group": "hitl",
+                "title": "<b>⏸️ Human Approval Required</b><br>Agent: ResolutionTrackerAgent<br>Checkpoints: refund_approval, response_review",
+                "color": {
+                    "background": "#DC2626",
+                    "border": "#F87171"
+                },
+                "shape": "diamond"
+            },
+            {
+                "id": "reporting_agent",
+                "label": "ReportingAgent",
+                "group": "agent",
+                "title": "<b>ReportingAgent</b><br><i>Analytics & Dashboard</i><br>Confidence: 91%<br>HITL: No ✅",
+                "color": {
+                    "background": "#7C3AED",
+                    "border": "#9F67FF"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "tool_spacy",
+                "label": "🔧 spaCy NLP",
+                "group": "tool",
+                "color": {
+                    "background": "#059669",
+                    "border": "#10B981"
+                },
+                "shape": "ellipse"
+            },
+            {
+                "id": "tool_chromadb",
+                "label": "🔧 ChromaDB",
+                "group": "tool",
+                "color": {
+                    "background": "#059669",
+                    "border": "#10B981"
+                },
+                "shape": "ellipse"
+            },
+            {
+                "id": "tool_crm",
+                "label": "🔧 CRM API",
+                "group": "tool",
+                "color": {
+                    "background": "#059669",
+                    "border": "#10B981"
+                },
+                "shape": "ellipse"
+            },
+            {
+                "id": "tool_analytics",
+                "label": "🔧 Analytics Engine",
+                "group": "tool",
+                "color": {
+                    "background": "#059669",
+                    "border": "#10B981"
+                },
+                "shape": "ellipse"
+            },
+            {
+                "id": "out_reports",
+                "label": "📤 KPI Reports",
+                "group": "output",
+                "color": {
+                    "background": "#D97706",
+                    "border": "#FCD34D"
+                },
+                "shape": "box"
+            },
+            {
+                "id": "out_resolution",
+                "label": "📤 Resolution Record",
+                "group": "output",
+                "color": {
+                    "background": "#D97706",
+                    "border": "#FCD34D"
+                },
+                "shape": "box"
+            }
+        ],
+        "edges": [
+            {
+                "from": "inp_support_tickets",
+                "to": "ticket_classifier"
+            },
+            {
+                "from": "ticket_classifier",
+                "to": "sentiment_agent"
+            },
+            {
+                "from": "sentiment_agent",
+                "to": "knowledge_retrieval"
+            },
+            {
+                "from": "knowledge_retrieval",
+                "to": "escalation_agent"
+            },
+            {
+                "from": "escalation_agent",
+                "to": "hitl_escalation",
+                "label": "requires approval"
+            },
+            {
+                "from": "hitl_escalation",
+                "to": "resolution_tracker",
+                "label": "approved"
+            },
+            {
+                "from": "resolution_tracker",
+                "to": "hitl_resolution",
+                "label": "requires approval"
+            },
+            {
+                "from": "hitl_resolution",
+                "to": "reporting_agent",
+                "label": "approved"
+            },
+            {
+                "from": "ticket_classifier",
+                "to": "tool_spacy",
+                "dashes": true
+            },
+            {
+                "from": "knowledge_retrieval",
+                "to": "tool_chromadb",
+                "dashes": true
+            },
+            {
+                "from": "resolution_tracker",
+                "to": "tool_crm",
+                "dashes": true
+            },
+            {
+                "from": "reporting_agent",
+                "to": "tool_analytics",
+                "dashes": true
+            },
+            {
+                "from": "reporting_agent",
+                "to": "out_reports"
+            },
+            {
+                "from": "resolution_tracker",
+                "to": "out_resolution"
+            }
+        ]
+    }
+}
