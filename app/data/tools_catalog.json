@@ -1,0 +1,510 @@
+{
+    "tools": [
+        {
+            "name": "pandas",
+            "pip_install": "pip install pandas",
+            "category": "data_processing",
+            "purpose": "Data manipulation and analysis",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs to process tabular data, CSVs, or perform data transformations",
+            "docs_url": "https://pandas.pydata.org/docs/"
+        },
+        {
+            "name": "duckdb",
+            "pip_install": "pip install duckdb",
+            "category": "data_processing",
+            "purpose": "In-process SQL analytical database",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs fast SQL queries on local data without a server",
+            "docs_url": "https://duckdb.org/docs/"
+        },
+        {
+            "name": "polars",
+            "pip_install": "pip install polars",
+            "category": "data_processing",
+            "purpose": "High-performance DataFrame library",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs faster data processing than pandas for large datasets",
+            "docs_url": "https://pola.rs/"
+        },
+        {
+            "name": "sqlalchemy",
+            "pip_install": "pip install sqlalchemy",
+            "category": "data_processing",
+            "purpose": "SQL toolkit and ORM for database access",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs to connect to SQL databases (PostgreSQL, MySQL, etc.)",
+            "docs_url": "https://docs.sqlalchemy.org/"
+        },
+        {
+            "name": "pydantic",
+            "pip_install": "pip install pydantic",
+            "category": "data_processing",
+            "purpose": "Data validation using Python type annotations",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs strict input/output validation and data modeling",
+            "docs_url": "https://docs.pydantic.dev/"
+        },
+        {
+            "name": "langchain",
+            "pip_install": "pip install langchain",
+            "category": "llm_frameworks",
+            "purpose": "LLM application framework with chains and tools",
+            "free": true,
+            "framework_compat": [
+                "langgraph",
+                "crewai"
+            ],
+            "use_when": "Agent needs to chain multiple LLM calls or use tool-calling patterns",
+            "docs_url": "https://python.langchain.com/docs/"
+        },
+        {
+            "name": "langgraph",
+            "pip_install": "pip install langgraph",
+            "category": "llm_frameworks",
+            "purpose": "Stateful multi-agent orchestration with graph workflows",
+            "free": true,
+            "framework_compat": [
+                "langgraph"
+            ],
+            "use_when": "Complex workflows with conditional branching, state management, and HITL",
+            "docs_url": "https://langchain-ai.github.io/langgraph/"
+        },
+        {
+            "name": "crewai",
+            "pip_install": "pip install crewai",
+            "category": "llm_frameworks",
+            "purpose": "Role-based AI agent teams with simple orchestration",
+            "free": true,
+            "framework_compat": [
+                "crewai"
+            ],
+            "use_when": "Quick setup of role-based agent teams with sequential or hierarchical processes",
+            "docs_url": "https://docs.crewai.com/"
+        },
+        {
+            "name": "llama-index",
+            "pip_install": "pip install llama-index",
+            "category": "llm_frameworks",
+            "purpose": "Data framework for LLM apps with advanced RAG",
+            "free": true,
+            "framework_compat": [
+                "llamaindex",
+                "langgraph"
+            ],
+            "use_when": "Agent needs advanced RAG with structured data, knowledge graphs, or multi-modal",
+            "docs_url": "https://docs.llamaindex.ai/"
+        },
+        {
+            "name": "autogen",
+            "pip_install": "pip install autogen",
+            "category": "llm_frameworks",
+            "purpose": "Multi-agent conversation framework",
+            "free": true,
+            "framework_compat": [
+                "autogen"
+            ],
+            "use_when": "Agent needs conversational multi-agent collaboration with group chat",
+            "docs_url": "https://microsoft.github.io/autogen/"
+        },
+        {
+            "name": "chromadb",
+            "pip_install": "pip install chromadb",
+            "category": "vector_databases",
+            "purpose": "Embedded vector database for semantic search",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs local vector storage for RAG without infrastructure",
+            "docs_url": "https://docs.trychroma.com/"
+        },
+        {
+            "name": "faiss-cpu",
+            "pip_install": "pip install faiss-cpu",
+            "category": "vector_databases",
+            "purpose": "High-performance similarity search by Facebook AI",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs fast nearest-neighbor search on large vector collections",
+            "docs_url": "https://faiss.ai/"
+        },
+        {
+            "name": "qdrant-client",
+            "pip_install": "pip install qdrant-client",
+            "category": "vector_databases",
+            "purpose": "Vector database with rich filtering capabilities",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs vector search with complex metadata filtering",
+            "docs_url": "https://qdrant.tech/documentation/"
+        },
+        {
+            "name": "weaviate-client",
+            "pip_install": "pip install weaviate-client",
+            "category": "vector_databases",
+            "purpose": "AI-native vector database with hybrid search",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs hybrid search combining vector and keyword approaches",
+            "docs_url": "https://weaviate.io/developers/weaviate"
+        },
+        {
+            "name": "beautifulsoup4",
+            "pip_install": "pip install beautifulsoup4",
+            "category": "web_scraping",
+            "purpose": "HTML/XML parsing library",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to extract data from web pages or HTML documents",
+            "docs_url": "https://www.crummy.com/software/BeautifulSoup/bs4/doc/"
+        },
+        {
+            "name": "playwright",
+            "pip_install": "pip install playwright",
+            "category": "web_scraping",
+            "purpose": "Browser automation for dynamic web content",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to interact with JavaScript-heavy websites",
+            "docs_url": "https://playwright.dev/python/docs/intro"
+        },
+        {
+            "name": "scrapy",
+            "pip_install": "pip install scrapy",
+            "category": "web_scraping",
+            "purpose": "Fast web crawling and scraping framework",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph"
+            ],
+            "use_when": "Agent needs to crawl multiple pages or entire websites systematically",
+            "docs_url": "https://docs.scrapy.org/"
+        },
+        {
+            "name": "httpx",
+            "pip_install": "pip install httpx",
+            "category": "web_scraping",
+            "purpose": "Modern async HTTP client",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs async HTTP requests or HTTP/2 support",
+            "docs_url": "https://www.python-httpx.org/"
+        },
+        {
+            "name": "requests",
+            "pip_install": "pip install requests",
+            "category": "api_integration",
+            "purpose": "Simple HTTP library for API calls",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs to make REST API calls to external services",
+            "docs_url": "https://requests.readthedocs.io/"
+        },
+        {
+            "name": "fastapi",
+            "pip_install": "pip install fastapi",
+            "category": "api_integration",
+            "purpose": "High-performance API framework",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to expose its own API endpoints for external consumption",
+            "docs_url": "https://fastapi.tiangolo.com/"
+        },
+        {
+            "name": "aiohttp",
+            "pip_install": "pip install aiohttp",
+            "category": "api_integration",
+            "purpose": "Async HTTP client/server framework",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs concurrent async API calls for high throughput",
+            "docs_url": "https://docs.aiohttp.org/"
+        },
+        {
+            "name": "grpcio",
+            "pip_install": "pip install grpcio",
+            "category": "api_integration",
+            "purpose": "gRPC client/server for high-performance RPC",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph"
+            ],
+            "use_when": "Agent needs low-latency communication with gRPC-based microservices",
+            "docs_url": "https://grpc.io/docs/languages/python/"
+        },
+        {
+            "name": "websockets",
+            "pip_install": "pip install websockets",
+            "category": "api_integration",
+            "purpose": "WebSocket client and server library",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs real-time bidirectional communication",
+            "docs_url": "https://websockets.readthedocs.io/"
+        },
+        {
+            "name": "pymupdf",
+            "pip_install": "pip install pymupdf",
+            "category": "document_processing",
+            "purpose": "PDF text and image extraction",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs to read PDF documents, extract text, tables, or images",
+            "docs_url": "https://pymupdf.readthedocs.io/"
+        },
+        {
+            "name": "python-docx",
+            "pip_install": "pip install python-docx",
+            "category": "document_processing",
+            "purpose": "Create and modify Word documents",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to generate or parse .docx Word files",
+            "docs_url": "https://python-docx.readthedocs.io/"
+        },
+        {
+            "name": "reportlab",
+            "pip_install": "pip install reportlab",
+            "category": "document_processing",
+            "purpose": "PDF generation and report creation",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to generate formatted PDF reports programmatically",
+            "docs_url": "https://docs.reportlab.com/"
+        },
+        {
+            "name": "pypdf",
+            "pip_install": "pip install pypdf",
+            "category": "document_processing",
+            "purpose": "Pure-Python PDF manipulation",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs to merge, split, or watermark PDF files",
+            "docs_url": "https://pypdf.readthedocs.io/"
+        },
+        {
+            "name": "pillow",
+            "pip_install": "pip install Pillow",
+            "category": "document_processing",
+            "purpose": "Image processing and manipulation",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs to resize, crop, or analyze images",
+            "docs_url": "https://pillow.readthedocs.io/"
+        },
+        {
+            "name": "loguru",
+            "pip_install": "pip install loguru",
+            "category": "monitoring",
+            "purpose": "Simple and powerful logging with minimal setup",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs structured logging with rotation and filtering",
+            "docs_url": "https://loguru.readthedocs.io/"
+        },
+        {
+            "name": "prometheus-client",
+            "pip_install": "pip install prometheus-client",
+            "category": "monitoring",
+            "purpose": "Prometheus metrics instrumentation",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to expose metrics for monitoring dashboards",
+            "docs_url": "https://prometheus.github.io/client_python/"
+        },
+        {
+            "name": "opentelemetry-sdk",
+            "pip_install": "pip install opentelemetry-sdk",
+            "category": "monitoring",
+            "purpose": "Distributed tracing and observability",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs end-to-end tracing across distributed agent systems",
+            "docs_url": "https://opentelemetry.io/docs/languages/python/"
+        },
+        {
+            "name": "rich",
+            "pip_install": "pip install rich",
+            "category": "monitoring",
+            "purpose": "Beautiful terminal output with tables and progress bars",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen",
+                "llamaindex"
+            ],
+            "use_when": "Agent needs pretty console output for debugging or user-facing CLI",
+            "docs_url": "https://rich.readthedocs.io/"
+        },
+        {
+            "name": "slack-sdk",
+            "pip_install": "pip install slack-sdk",
+            "category": "communication",
+            "purpose": "Slack API integration for messaging",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to send notifications or interact via Slack channels",
+            "docs_url": "https://slack.dev/python-slack-sdk/"
+        },
+        {
+            "name": "sendgrid",
+            "pip_install": "pip install sendgrid",
+            "category": "communication",
+            "purpose": "Email sending via SendGrid API",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to send transactional or notification emails",
+            "docs_url": "https://docs.sendgrid.com/for-developers/sending-email/quickstart-python"
+        },
+        {
+            "name": "aiosmtplib",
+            "pip_install": "pip install aiosmtplib",
+            "category": "communication",
+            "purpose": "Async SMTP email sending",
+            "free": true,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs async email sending without third-party services",
+            "docs_url": "https://aiosmtplib.readthedocs.io/"
+        },
+        {
+            "name": "twilio",
+            "pip_install": "pip install twilio",
+            "category": "communication",
+            "purpose": "SMS and voice communication API",
+            "free": false,
+            "framework_compat": [
+                "crewai",
+                "langgraph",
+                "autogen"
+            ],
+            "use_when": "Agent needs to send SMS alerts or make phone calls",
+            "docs_url": "https://www.twilio.com/docs/libraries/python"
+        }
+    ]
+}

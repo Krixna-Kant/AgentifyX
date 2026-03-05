@@ -1,0 +1,108 @@
+{
+  "templates": [
+    {
+      "id": "healthcare",
+      "name": "Healthcare & Medical Systems",
+      "icon": "🏥",
+      "description": "HIPAA-compliant pipelines for patient data and clinical workflows",
+      "domain_context": "This system operates in a healthcare environment. Key concerns include: patient data privacy (HIPAA compliance required), clinical decision support (physicians must remain in the loop for all diagnoses), interoperability with HL7 FHIR standards, audit trails for all agent actions, and integration with EHR systems. Agents must never make autonomous clinical decisions without physician approval.",
+      "typical_agents": ["PatientIntakeAgent", "TriageAgent", "DiagnosisAssistAgent", "ComplianceAuditAgent", "AppointmentAgent"],
+      "compliance_flags": ["HIPAA", "HL7 FHIR", "GDPR", "FDA 21 CFR Part 11"],
+      "recommended_tools": ["fhirclient", "hl7apy", "pandas", "sqlalchemy", "boto3"],
+      "hitl_requirement": "HIGH — All clinical decisions require physician approval",
+      "color": "#059669",
+      "example_use_case": "Transform manual patient intake and triage into an autonomous pre-screening pipeline with physician sign-off checkpoints"
+    },
+    {
+      "id": "finance",
+      "name": "Finance & Banking",
+      "icon": "🏦",
+      "description": "SOX-compliant fraud detection and regulatory reporting automation",
+      "domain_context": "Financial services environment with strict regulatory requirements: SOX compliance, AML/KYC checks, real-time fraud detection, audit trails for every transaction, and regulatory reporting (SEC, RBI, FCA depending on jurisdiction). No autonomous financial transactions above defined thresholds without human approval.",
+      "typical_agents": ["FraudDetectionAgent", "KYCAgent", "RiskScoringAgent", "ComplianceReportAgent", "TransactionAgent"],
+      "compliance_flags": ["SOX", "AML", "KYC", "PCI-DSS", "GDPR"],
+      "recommended_tools": ["pandas", "sqlalchemy", "requests", "pydantic", "reportlab"],
+      "hitl_requirement": "HIGH — All transactions above threshold need human approval",
+      "color": "#1A56A6",
+      "example_use_case": "Transform manual KYC document review into an autonomous verification pipeline with compliance officer sign-off"
+    },
+    {
+      "id": "ecommerce",
+      "name": "E-Commerce & Retail",
+      "icon": "🛒",
+      "description": "Dynamic pricing, inventory optimization, and customer personalization",
+      "domain_context": "E-commerce platform focused on customer experience, inventory optimization, and personalization. Agents handle catalog management, dynamic pricing, order fulfillment, and customer support escalation. High throughput, low latency requirements.",
+      "typical_agents": ["CatalogAgent", "PricingAgent", "InventoryAgent", "OrderFulfillmentAgent", "CustomerSupportAgent"],
+      "compliance_flags": ["GDPR", "PCI-DSS", "Consumer Protection Laws"],
+      "recommended_tools": ["pandas", "redis", "sqlalchemy", "requests", "pillow"],
+      "hitl_requirement": "MEDIUM — Price changes above 20% and refunds above threshold need approval",
+      "color": "#D97706",
+      "example_use_case": "Transform manual inventory reordering into an autonomous demand-forecasting and supplier coordination pipeline"
+    },
+    {
+      "id": "supply_chain",
+      "name": "Supply Chain & Logistics",
+      "icon": "🚚",
+      "description": "Demand forecasting, supplier management, and logistics optimization",
+      "domain_context": "Supply chain and logistics optimization. Agents manage demand forecasting, supplier communication, inventory rebalancing, and logistics routing. Real-time event-driven architecture essential. Integration with ERP systems (SAP, Oracle) common.",
+      "typical_agents": ["DemandForecastAgent", "SupplierAgent", "InventoryRebalanceAgent", "LogisticsAgent", "ExceptionHandlerAgent"],
+      "compliance_flags": ["ISO 28000", "C-TPAT", "Trade Compliance"],
+      "recommended_tools": ["pandas", "sqlalchemy", "httpx", "pydantic", "duckdb"],
+      "hitl_requirement": "MEDIUM — Large purchase orders and supplier contract changes need approval",
+      "color": "#7C3AED",
+      "example_use_case": "Transform spreadsheet-based inventory tracking into a real-time autonomous rebalancing system"
+    },
+    {
+      "id": "legal",
+      "name": "Legal & Compliance",
+      "icon": "⚖️",
+      "description": "Document review, contract analysis, and regulatory monitoring",
+      "domain_context": "Legal and compliance workflows. Document review, contract analysis, regulatory monitoring, and case management. All legal opinions and advice must be reviewed by qualified attorneys. Strong audit trail required for all agent actions.",
+      "typical_agents": ["DocumentReviewAgent", "ContractAnalysisAgent", "RegulatoryMonitorAgent", "CaseResearchAgent", "ComplianceCheckAgent"],
+      "compliance_flags": ["Attorney-Client Privilege", "GDPR", "Bar Association Rules"],
+      "recommended_tools": ["pymupdf", "python-docx", "pandas", "chromadb", "requests"],
+      "hitl_requirement": "VERY HIGH — All legal opinions require attorney review before delivery",
+      "color": "#DC2626",
+      "example_use_case": "Transform manual contract review into an autonomous risk-flagging pipeline with attorney approval gates"
+    },
+    {
+      "id": "customer_support",
+      "name": "Customer Support",
+      "icon": "🎧",
+      "description": "Ticket classification, sentiment analysis, and escalation routing",
+      "domain_context": "Customer support automation. Ticket classification, sentiment analysis, knowledge base retrieval, escalation routing, and resolution tracking. Focus on response time reduction and customer satisfaction. Escalation to human agents for complex or sensitive cases.",
+      "typical_agents": ["TicketClassifierAgent", "SentimentAgent", "KnowledgeBaseAgent", "EscalationAgent", "ResolutionTrackerAgent"],
+      "compliance_flags": ["GDPR", "CCPA", "Consumer Protection"],
+      "recommended_tools": ["chromadb", "sentence-transformers", "pandas", "sqlalchemy", "requests"],
+      "hitl_requirement": "LOW-MEDIUM — Angry customers and refund requests escalate to humans",
+      "color": "#059669",
+      "example_use_case": "Transform manual ticket routing into an autonomous triage system with smart escalation to human agents"
+    },
+    {
+      "id": "hr",
+      "name": "HR & Recruiting",
+      "icon": "👥",
+      "description": "Resume screening, interview scheduling, and onboarding automation",
+      "domain_context": "HR and recruiting workflows. Resume screening, interview scheduling, onboarding document processing, payroll queries, and employee data management. Bias prevention is critical — human review required for all hiring decisions. EEOC compliance required.",
+      "typical_agents": ["ResumeScreenerAgent", "InterviewSchedulerAgent", "OnboardingAgent", "PayrollQueryAgent", "ComplianceAgent"],
+      "compliance_flags": ["EEOC", "GDPR", "Labor Laws", "HIPAA (for health benefits)"],
+      "recommended_tools": ["pandas", "pymupdf", "sqlalchemy", "chromadb", "pydantic"],
+      "hitl_requirement": "HIGH — All hiring/firing decisions require HR manager approval",
+      "color": "#D97706",
+      "example_use_case": "Transform manual resume screening into an autonomous shortlisting pipeline with bias detection and HR approval"
+    },
+    {
+      "id": "manufacturing",
+      "name": "Manufacturing & Industry 4.0",
+      "icon": "🏭",
+      "description": "Predictive maintenance, quality control, and production scheduling",
+      "domain_context": "Smart manufacturing and Industry 4.0. Predictive maintenance, quality control, production scheduling, and supply chain coordination. OT/IT integration with SCADA and PLC systems. Safety-critical operations require human oversight.",
+      "typical_agents": ["PredictiveMaintenanceAgent", "QualityControlAgent", "ProductionSchedulerAgent", "SafetyMonitorAgent", "SupplyCoordinatorAgent"],
+      "compliance_flags": ["ISO 9001", "OSHA", "IEC 62443", "FDA (for pharma manufacturing)"],
+      "recommended_tools": ["pandas", "sqlalchemy", "prometheus-client", "pydantic", "requests"],
+      "hitl_requirement": "HIGH — Safety-critical decisions and production halts require human approval",
+      "color": "#94A3B8",
+      "example_use_case": "Transform scheduled maintenance routines into a predictive autonomous system with safety engineer approval gates"
+    }
+  ]
+}
