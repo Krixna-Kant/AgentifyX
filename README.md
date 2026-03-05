@@ -1,135 +1,154 @@
-# 🚀 AgentifyX: Engineering the Change
+# 🚀 AgentifyX
 
-> **A Middleware Engine for Transforming Conventional Solutions into Agentic AI Frameworks.**
+![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_AI-4285F4?logo=google&logoColor=white)
+![TECHgium](https://img.shields.io/badge/TECHgium-9th_Edition-7C3AED)
 
-AgentifyX is a reasoning-driven middleware designed to bridge legacy, rule-based digital solutions with modern autonomous architectures. Built for the **9th Edition TECHgium Challenge**, this system analyzes existing system documentation, evaluates its feasibility for agentic integration, and dynamically generates multi-agent blueprint code.
-
----
-
-## 📸 Project Showcase
-
-![AgentifyX Streamlit Dashboard](assests/Screenshots/screenshot_1.jpg)
-*Figure 1: The AgentifyX Streamlit Dashboard processing a legacy system document*
-
-![AI driven Extraction](assests/Screenshots/screenshot_2.jpg)
-*Figure 2: AI-driven extraction of legacy system limitations*
-
-![Architecture Blueprint](assests/Screenshots/screenshot_3.jpg)
-*Figure 3: The dynamically generated Agentic Architecture blueprint*
-
-![Strategic Summary](assests/Screenshots/screenshot_4.jpg)
-*Figure 4: Strategic summary and the 1-click CrewAI code export feature*
-
-![Generated Boilerplate Code](assests/Screenshots/screenshot_5.jpg)
-*Figure 5: The exported CrewAI boilerplate code ready for developer implementation*
+**Transform conventional software systems into Agentic AI architectures.**  
+Upload legacy system documentation (PDF) or point to a GitHub repo — AgentifyX analyzes the codebase, recommends an optimal agent architecture, generates framework-specific boilerplate, and produces enterprise-grade reports with interactive architecture diagrams.
 
 ---
 
-## 💡 The Problem
+## ✅ Features
 
-Most existing enterprise solutions are rigid, static, and lack autonomy. They rely on hard-coded rules (like Regex) and manual human escalation, making them inefficient in dynamic environments.
-
-While organizations want to adopt Agentic AI frameworks (ReAct, CrewAI), there is no structured way to evaluate their existing systems or map out a safe transformation path.
-
----
-
-## ⚙️ The Solution
-
-AgentifyX acts as an intelligent layer that automates the modernization process.
-
-1. **Ingest & Parse:** Extracts unstructured data, workflows, and goals from legacy documentation using PyMuPDF and spaCy.
-2. **Semantic Memory:** Chunks and embeds the system logic into a local ChromaDB vector store.
-3. **Reasoning Engine:** Uses Gemini via RAG to evaluate "Agentic Readiness" and map outdated logic to autonomous roles.
-4. **Code Generation:** Automatically writes and exports a downloadable `.py` boilerplate script utilizing the CrewAI framework.
-
----
-
-## 🛠️ Tech Stack
-
-### Backend Core
-
-| Technology | Purpose |
-|---|---|
-| **Python 3.10+** | Core runtime |
-| **FastAPI** | High-performance asynchronous API framework |
-| **Uvicorn** | ASGI server |
-
-### AI & NLP Pipeline
-
-| Technology | Purpose |
-|---|---|
-| **spaCy** | Intelligent sentence boundary detection and NLP chunking |
-| **ChromaDB** | Local vector database for semantic memory retrieval |
-| **Sentence-Transformers** | Semantic embedding generation |
-| **Google Gemini-3-flash-preview** | Core LLM reasoning engine |
-
-### Frontend & Orchestration
-
-| Technology | Purpose |
-|---|---|
-| **Streamlit** | Interactive, real-time data dashboard |
-| **CrewAI** | Multi-agent orchestration framework (target output) |
+| Feature | Status |
+|---------|--------|
+| 📄 Multimodal PDF extraction (text, tables, images via Gemini Vision) | ✅ |
+| 🧠 Semantic chunking + NER with spaCy | ✅ |
+| 🔍 Vector search with ChromaDB + Sentence Transformers | ✅ |
+| 🤖 Gemini-powered agentic blueprint generation | ✅ |
+| 📊 7-dimension readiness radar chart | ✅ |
+| 🏭 Industry-specific context templates (Healthcare, Finance, etc.) | ✅ |
+| 🔧 Multi-framework boilerplate (CrewAI, LangGraph, AutoGen) | ✅ |
+| ⚠️ HITL checkpoint code generator | ✅ |
+| 🛠️ Automated tools recommendation catalog | ✅ |
+| 💬 Streaming RAG chatbot with session persistence | ✅ |
+| 🕸️ Interactive vis.js agent graph (drag, zoom, click) | ✅ |
+| 🗺️ Mermaid flowchart & sequence diagrams | ✅ |
+| 🔗 GitHub repo analyzer with AST-based code analysis | ✅ |
+| ▶️ Agent pipeline simulation with HITL pause/approve/reject | ✅ |
+| 📄 PDF & DOCX report generation (10 sections each) | ✅ |
+| 📥 Full export (PDF/DOCX/JSON/Code/Diagrams) | ✅ |
+| 🎯 Demo mode (zero API calls, all 7 tabs work) | ✅ |
+| 🩺 Health check endpoint with service status | ✅ |
+| 🌙 Dark theme with premium aesthetics | ✅ |
 
 ---
 
-## 🚀 Running the Project Locally
+## 🚀 Quick Start
 
-### 1. Clone the Repository
+### 1. Clone & Setup
 
 ```bash
 git clone https://github.com/Krixna-Kant/AgentifyX.git
 cd AgentifyX
-```
-
-### 2. Set Up the Virtual Environment
-
-```bash
 python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# Mac/Linux
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
-
-```bash
-pip install fastapi uvicorn pypdf pymupdf spacy chromadb sentence-transformers google-generativeai python-dotenv streamlit requests
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
+pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 ```
 
-### 4. Environment Variables
+### 2. Configure Environment
 
-Create a `.env` file in the root directory and add your Gemini API key:
+Create a `.env` file in the project root:
 
 ```env
-GEMINI_API_KEY=your_actual_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-### 5. Launch the Services
+Get your key at: [Google AI Studio](https://aistudio.google.com/apikey)
 
-You need **two terminals** running simultaneously.
+### 3. Run
 
 **Terminal 1 — FastAPI Backend:**
-
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8000
 ```
 
 **Terminal 2 — Streamlit Frontend:**
-
 ```bash
 streamlit run app/frontend.py
 ```
 
-Open the provided `localhost` URL in your browser to interact with the AgentifyX dashboard!
+Open **http://localhost:8501** in your browser.
+
+### 4. Demo Mode (For Judges)
+
+Click **🎯 Load Demo** in the sidebar to instantly explore all 7 tabs with a pre-computed customer support system analysis — no API calls needed.
 
 ---
 
-## 🏆 Hackathon Context
+## 🏗️ Tech Stack
 
-This project was developed for the **TECHgium 9th Edition Presentation Round** under **PID TG0914909**.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Streamlit + Plotly + vis.js |
+| Backend | FastAPI + Uvicorn |
+| AI/LLM | Google Gemini 2.0 Flash |
+| Embeddings | Sentence Transformers (all-MiniLM-L6-v2) |
+| Vector DB | ChromaDB |
+| NLP | spaCy (en_core_web_sm) |
+| Reports | ReportLab (PDF) + python-docx (DOCX) |
+| Database | SQLite (via SQLAlchemy) |
+| Code Analysis | PyGitHub + Python AST |
 
-> **Challenge Statement Focus:** Build a reasoning-driven middleware engine that analyzes existing solution documentation and recommends functional and technical improvements using agentic frameworks.
+---
+
+## 📁 Project Structure
+
+```
+AgentifyX/
+├── app/
+│   ├── main.py                    # FastAPI application
+│   ├── frontend.py                # Streamlit 7-tab dashboard
+│   ├── schemas/
+│   │   └── agent_roster.py        # Pydantic AgentRoster schema
+│   ├── services/
+│   │   ├── llm_engine.py          # Gemini blueprint generation
+│   │   ├── document_parser.py     # PDF extraction
+│   │   ├── semantic_pipeline.py   # Chunking + embedding
+│   │   ├── boilerplate_generator.py  # Multi-framework code gen
+│   │   ├── graph_builder.py       # vis.js graph spec builder
+│   │   ├── github_analyzer.py     # GitHub repo + AST analysis
+│   │   ├── simulation_generator.py   # Pipeline simulation
+│   │   ├── hitl_generator.py      # HITL checkpoint code gen
+│   │   ├── tools_matcher.py       # Tools recommendation
+│   │   ├── report_generator.py    # PDF report (ReportLab)
+│   │   └── docx_generator.py      # DOCX report (python-docx)
+│   ├── routers/
+│   │   └── chat.py                # Streaming chat endpoint
+│   ├── db/
+│   │   ├── database.py            # SQLite session storage
+│   │   └── models.py              # SQLAlchemy models
+│   ├── data/
+│   │   ├── industry_templates.json
+│   │   └── tools_catalog.json
+│   └── demo/
+│       └── demo_roster.json       # Pre-computed demo data
+├── requirements.txt
+├── .env
+└── README.md
+```
+
+---
+
+## 📋 API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/health` | Service health check |
+| `POST` | `/api/v1/process-document` | Analyze PDF + optional GitHub |
+| `GET` | `/api/v1/industry-templates` | List industry templates |
+| `POST` | `/api/v1/generate-boilerplate` | Generate framework code |
+| `POST` | `/api/chat` | Streaming RAG chatbot |
+| `GET` | `/api/v1/sessions` | List analysis sessions |
+| `GET` | `/api/v1/sessions/{id}` | Get session details |
+
+---
+
+## 📜 License
+
+Built for **TECHgium 9th Edition** hackathon.
