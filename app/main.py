@@ -23,6 +23,7 @@ from app.services.boilerplate_generator import generate_boilerplate, SUPPORTED_F
 from app.services.graph_builder import build_graph_spec
 from app.services.github_analyzer import analyze_github_repo
 from app.routers.chat import router as chat_router
+from app.routers.roster_chat import router as roster_chat_router
 from app.db.database import init_db, SessionLocal
 from app.db.models import AnalysisSession
 
@@ -42,6 +43,7 @@ app.add_middleware(
 )
 
 app.include_router(chat_router)
+app.include_router(roster_chat_router)
 
 # Initialize DB tables on startup
 @app.on_event("startup")

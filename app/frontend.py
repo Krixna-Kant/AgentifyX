@@ -798,39 +798,172 @@ with tab4:
 
 # ── Tab 5: Chat ─────────────────────────────────────────────────────────────
 with tab5:
-    st.subheader("💬 Chat with AgentifyX Assistant")
     if "roster" not in st.session_state:
         st.info("📤 Please analyze a document first to enable the chat assistant.")
     else:
         roster = st.session_state["roster"]
+
+        # ── Mode toggle ─────────────────────────────────────────
+        chat_mode = st.radio(
+            "Chat Mode",
+            ["💬 Q&A Assistant", "🏗️ Architect Mode"],
+            horizontal=True,
+            key="chat_mode_radio",
+            help="Q&A: ask questions about your analysis. Architect: add/modify/remove agents live.",
+        )
+        is_architect = chat_mode == "🏗️ Architect Mode"
+
+        if is_architect:
+            st.markdown(
+                '<div style="background:rgba(124,58,237,0.15);border:1px solid #7C3AED;'
+                'border-radius:8px;padding:8px 14px;color:#C4B5FD;font-weight:500;'
+                'text-align:center;margin-bottom:8px">'
+                '🏗️ Architect Mode — Add, modify, or remove agents through conversation. '
+                'Changes update your entire dashboard live.</div>',
+                unsafe_allow_html=True,
+            )
+            st.subheader("🏗️ Architect Chat")
+        else:
+            st.subheader("💬 Chat with AgentifyX Assistant")
+
+        # ── Init state ──────────────────────────────────────────
         if "chat_history" not in st.session_state:
             st.session_state["chat_history"] = []
-        chat_history = st.session_state["chat_history"]
+        if "architect_history" not in st.session_state:
+            st.session_state["architect_history"] = []
+        if "architect_clarification_count" not in st.session_state:
+            st.session_state["architect_clarification_count"] = 0
+        if "roster_snapshots" not in st.session_state:
+            st.session_state["roster_snapshots"] = []
+        if "pending_roster_refresh" not in st.session_state:
+            st.session_state["pending_roster_refresh"] = False
 
-        if len(chat_history) == 0:
-            st.write("#### 💡 Get started with a question:")
-            suggestions = ["❓ Why these specific agents?", "🔧 How do I implement HITL checkpoints?",
-                "⚖️ Which framework should I choose?", "🛠️ What tools should I set up first?",
-                "⏱️ How long will this transformation take?"]
-            sg_cols = st.columns(len(suggestions))
+        # ── Apply pending refresh (triggered from previous cycle) ─
+        if st.session_state.get("pending_roster_refresh"):
+            st.session_state["pending_roster_refresh"] = False
+            # Roster is already updated — tabs will read from session_state
+
+        # ── Select active history ────────────────────────────────
+        active_history_key = "architect_history" if is_architect else "chat_history"
+        active_history = st.session_state[active_history_key]
+
+        # ── Smart Suggestions ────────────────────────────────────
+        if len(active_history) == 0:
+            st.write("#### 💡 Get started:")
+            if is_architect:
+                # Dynamic smart suggestions
+                def _get_architect_suggestions(r):
+                    suggestions = []
+                    agents = r.get("agents", [])
+                    if agents:
+                        sa = sorted(agents, key=lambda a: a.get("confidence_score", 1))
+                        w = sa[0]
+                        cp = int(w.get("confidence_score", 0) * 100)
+                        suggestions.append(
+                            f"🔍 Strengthen {w.get('agent_name', 'agent')} — "
+                            f"confidence is only {cp}%"
+                        )
+                        risky = ["payment", "email", "delete", "send", "billing",
+                                 "notify", "refund", "transfer", "approve"]
+                        for ag in agents:
+                            gl = ag.get("goal", "").lower()
+                            if not ag.get("hitl_required") and any(k in gl for k in risky):
+                                suggestions.append(
+                                    f"🔒 Add HITL to {ag.get('agent_name', 'agent')} "
+                                    f"— it performs risky actions"
+                                )
+                                break
+                    dg = r.get("data_gaps", [])
+                    if dg:
+                        suggestions.append(f"📋 Address: {dg[0][:55]}...")
+                    suggestions.append("🛡️ Add an error handling and retry agent")
+                    suggestions.append("📡 Add a monitoring and alerting agent")
+                    return suggestions[:4]
+
+                suggestions = _get_architect_suggestions(roster)
+            else:
+                suggestions = [
+                    "❓ Why these specific agents?",
+                    "🔧 How do I implement HITL checkpoints?",
+                    "⚖️ Which framework should I choose?",
+                    "🛠️ What tools should I set up first?",
+                    "⏱️ How long will this transformation take?",
+                ]
+
+            sg_cols = st.columns(min(len(suggestions), 4))
             for col, sug in zip(sg_cols, suggestions):
                 with col:
-                    if st.button(sug, key=f"sg_{sug[:10]}", use_container_width=True):
+                    if st.button(sug, key=f"sg_{hash(sug)}", use_container_width=True):
                         st.session_state["pending_chat_msg"] = sug
                         st.rerun()
 
-        for msg in chat_history:
+        # ── Undo button (Architect Mode only) ────────────────────
+        if is_architect and st.session_state.get("roster_snapshots"):
+            undo_col, spacer_col = st.columns([2, 8])
+            with undo_col:
+                if st.button("↩️ Undo Last Change", key="arch_undo"):
+                    snaps = st.session_state["roster_snapshots"]
+                    prev_roster = snaps.pop()
+                    st.session_state["roster"] = prev_roster
+                    st.session_state["roster_snapshots"] = snaps
+                    # Remove the last roster_update + user message pair from history
+                    ah = st.session_state["architect_history"]
+                    while ah and ah[-1].get("msg_type") != "roster_update":
+                        ah.pop()
+                    if ah:
+                        ah.pop()  # remove the roster_update message
+                    if ah:
+                        ah.pop()  # remove the user message that triggered it
+                    st.session_state["architect_history"] = ah
+                    st.success("↩️ Reverted to previous roster.")
+                    st.rerun()
+
+        # ── Render conversation history ──────────────────────────
+        for msg in active_history:
             role = msg.get("role", "user")
-            with st.chat_message(role, avatar="🤖" if role == "assistant" else None):
-                st.markdown(msg.get("content", ""))
+            msg_type = msg.get("msg_type", "text")
 
+            if msg_type == "roster_update":
+                # Special green roster update bubble
+                changes = msg.get("changes", {})
+                added = changes.get("added", [])
+                modified = changes.get("modified", [])
+                removed = changes.get("removed", [])
+                summary_parts = []
+                if added:
+                    summary_parts.append(f"**Added:** {', '.join(added)}")
+                if modified:
+                    summary_parts.append(f"**Modified:** {', '.join(modified)}")
+                if removed:
+                    summary_parts.append(f"**Removed:** {', '.join(removed)}")
+                changes_text = " · ".join(summary_parts) if summary_parts else "Roster updated"
+
+                st.markdown(
+                    f'<div style="background:rgba(5,150,105,0.15);border:1px solid #059669;'
+                    f'border-radius:8px;padding:10px 14px;margin:6px 0">'
+                    f'<span style="color:#6EE7B7;font-weight:700">✅ Roster Updated</span>'
+                    f'<br><span style="color:#E2E8F0">{msg.get("content", "")}</span>'
+                    f'<br><span style="color:#94A3B8;font-size:0.85rem">{changes_text}</span>'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
+            else:
+                with st.chat_message(role, avatar="🤖" if role == "assistant" else None):
+                    st.markdown(msg.get("content", ""))
+
+        # ── Chat input ───────────────────────────────────────────
         pending = st.session_state.pop("pending_chat_msg", None)
-
-        # Use text_input + button instead of chat_input (can't be inside tabs)
         chat_col1, chat_col2 = st.columns([6, 1])
         with chat_col1:
-            user_input = st.text_input("Message", placeholder="Ask about your agent architecture...",
-                                       key="chat_text_input", label_visibility="collapsed")
+            placeholder = (
+                "Tell me what to change: add agents, modify tools, set HITL..."
+                if is_architect
+                else "Ask about your agent architecture..."
+            )
+            user_input = st.text_input(
+                "Message", placeholder=placeholder,
+                key="chat_text_input", label_visibility="collapsed",
+            )
         with chat_col2:
             send_clicked = st.button("📩 Send", key="chat_send_btn", type="primary")
 
@@ -838,31 +971,162 @@ with tab5:
             user_input = pending
             send_clicked = True
 
+        # ── Send message ─────────────────────────────────────────
         if user_input and send_clicked:
-            chat_history.append({"role": "user", "content": user_input})
-            with st.chat_message("user"): st.markdown(user_input)
-            with st.chat_message("assistant", avatar="🤖"):
-                rp = st.empty()
-                full = ""
-                payload = {"message": user_input, "session_id": st.session_state.get("session_id", ""),
-                    "conversation_history": chat_history[-20:], "roster_json": roster,
-                    "source_document": st.session_state.get("uploaded_filename")}
-                try:
-                    resp = requests.post(f"{API_BASE}/api/chat", json=payload, stream=True, timeout=60)
-                    if resp.status_code == 200:
-                        for chunk in resp.iter_content(chunk_size=None, decode_unicode=True):
-                            if chunk: full += chunk; rp.markdown(full + "▌")
+            # Append user message
+            user_msg = {"role": "user", "content": user_input, "msg_type": "text"}
+            if is_architect:
+                user_msg["roster_before"] = json.dumps(roster)
+            active_history.append(user_msg)
+            with st.chat_message("user"):
+                st.markdown(user_input)
+
+            if is_architect:
+                # ── ARCHITECT MODE: call modify-roster endpoint ──
+                with st.spinner("🏗️ Analyzing your request..."):
+                    # Build conversation history for the endpoint (content only)
+                    conv_hist = [
+                        {"role": m["role"], "content": m["content"]}
+                        for m in active_history[-8:]
+                        if m.get("msg_type") != "roster_update"
+                    ]
+                    payload = {
+                        "message": user_input,
+                        "current_roster": roster,
+                        "conversation_history": conv_hist,
+                        "source_document": st.session_state.get("uploaded_filename"),
+                        "clarification_count": st.session_state.get(
+                            "architect_clarification_count", 0
+                        ),
+                    }
+                    try:
+                        resp = requests.post(
+                            f"{API_BASE}/api/chat/modify-roster",
+                            json=payload, timeout=120,
+                        )
+                        if resp.status_code == 200:
+                            data = resp.json()
+                            resp_type = data.get("response_type", "message")
+
+                            if resp_type == "roster_update":
+                                # Save snapshot for undo BEFORE applying
+                                st.session_state["roster_snapshots"].append(
+                                    json.loads(json.dumps(roster))
+                                )
+                                # Apply the update
+                                updated = data.get("updated_roster", roster)
+                                st.session_state["roster"] = updated
+
+                                # Add roster update message to history
+                                active_history.append({
+                                    "role": "assistant",
+                                    "content": data.get("content", "Roster updated."),
+                                    "msg_type": "roster_update",
+                                    "changes": data.get("changes_summary", {}),
+                                    "roster_after": json.dumps(updated),
+                                })
+                                # Reset clarification counter
+                                st.session_state["architect_clarification_count"] = 0
+                                st.session_state[active_history_key] = active_history
+
+                                # Show success + refresh button
+                                st.success(
+                                    f"✅ {data.get('content', 'Roster updated!')} "
+                                    "— All tabs now reflect the changes."
+                                )
+                                st.rerun()
+
+                            else:
+                                # Conversational reply
+                                st.session_state["architect_clarification_count"] += 1
+                                reply = data.get("content", "I'm not sure how to help.")
+                                active_history.append({
+                                    "role": "assistant",
+                                    "content": reply,
+                                    "msg_type": "text",
+                                })
+                                with st.chat_message("assistant", avatar="🤖"):
+                                    st.markdown(reply)
+                        else:
+                            detail = resp.json().get("detail", f"Status {resp.status_code}")
+                            err_msg = f"⚠️ Error: {detail}"
+                            active_history.append({
+                                "role": "assistant", "content": err_msg,
+                                "msg_type": "text",
+                            })
+                            with st.chat_message("assistant", avatar="🤖"):
+                                st.markdown(err_msg)
+                    except requests.exceptions.ConnectionError:
+                        err_msg = "❌ Cannot connect to API."
+                        active_history.append({
+                            "role": "assistant", "content": err_msg,
+                            "msg_type": "text",
+                        })
+                        with st.chat_message("assistant", avatar="🤖"):
+                            st.markdown(err_msg)
+                    except Exception as e:
+                        err_msg = f"⚠️ Error: {e}"
+                        active_history.append({
+                            "role": "assistant", "content": err_msg,
+                            "msg_type": "text",
+                        })
+                        with st.chat_message("assistant", avatar="🤖"):
+                            st.markdown(err_msg)
+
+            else:
+                # ── Q&A MODE: existing streaming chat ────────────
+                with st.chat_message("assistant", avatar="🤖"):
+                    rp = st.empty()
+                    full = ""
+                    payload = {
+                        "message": user_input,
+                        "session_id": st.session_state.get("session_id", ""),
+                        "conversation_history": active_history[-20:],
+                        "roster_json": roster,
+                        "source_document": st.session_state.get("uploaded_filename"),
+                    }
+                    try:
+                        resp = requests.post(
+                            f"{API_BASE}/api/chat", json=payload,
+                            stream=True, timeout=60,
+                        )
+                        if resp.status_code == 200:
+                            for chunk in resp.iter_content(
+                                chunk_size=None, decode_unicode=True
+                            ):
+                                if chunk:
+                                    full += chunk
+                                    rp.markdown(full + "▌")
+                            rp.markdown(full)
+                        else:
+                            full = f"⚠️ Error: status {resp.status_code}"
+                            rp.markdown(full)
+                    except requests.exceptions.ConnectionError:
+                        full = "❌ Cannot connect to API."
                         rp.markdown(full)
-                    else: full = f"⚠️ Error: status {resp.status_code}"; rp.markdown(full)
-                except requests.exceptions.ConnectionError:
-                    full = "❌ Cannot connect to API."; rp.markdown(full)
-                except Exception as e: full = f"⚠️ Error: {e}"; rp.markdown(full)
-            chat_history.append({"role": "assistant", "content": full})
-            st.session_state["chat_history"] = chat_history
+                    except Exception as e:
+                        full = f"⚠️ Error: {e}"
+                        rp.markdown(full)
+                active_history.append({
+                    "role": "assistant", "content": full, "msg_type": "text",
+                })
+
+            st.session_state[active_history_key] = active_history
+
+            # Persist chat history to session
             sid = st.session_state.get("session_id")
             if sid:
-                try: requests.put(f"{API_BASE}/api/v1/sessions/{sid}/chat", json=chat_history[-20:], timeout=3)
-                except Exception: pass
+                try:
+                    plain_history = [
+                        {"role": m["role"], "content": m["content"]}
+                        for m in active_history[-20:]
+                    ]
+                    requests.put(
+                        f"{API_BASE}/api/v1/sessions/{sid}/chat",
+                        json=plain_history, timeout=3,
+                    )
+                except Exception:
+                    pass
 
 # ── Tab 6: Simulate ─────────────────────────────────────────────────────────
 with tab6:
